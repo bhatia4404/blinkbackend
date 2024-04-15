@@ -11,6 +11,7 @@ const UserSchema = new mongoose.Schema({
   blinkId: String,
   balance: Number,
   transactions: Array,
+  card: Object,
 });
 
 const User = mongoose.model("User", UserSchema);

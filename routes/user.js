@@ -26,7 +26,9 @@ userRouter.post("/signup", signupMiddleware, async function (req, res) {
     balance: newBal,
     blinkId: generateId({ suffix: "@blink" }),
     transactions: [newBal],
+    card: { exists: false },
   });
+
   res.json({
     message: "Signed up",
   });
