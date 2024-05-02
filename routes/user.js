@@ -55,5 +55,6 @@ userRouter.post("/signin", signinMiddleware, async function (req, res, next) {
     message: "Logged in",
     token,
   });
+  next();
 });
 module.exports = userRouter;

@@ -1,4 +1,5 @@
 const { Router } = require("express");
+const jwt = require("jsonwebtoken");
 const { User } = require("../db");
 const { authMiddleware } = require("../middlewares/account");
 const accountRouter = Router();
@@ -9,7 +10,19 @@ const {
   generatePin,
   generateExpiry,
 } = require("../helpers/generateCard");
+const JWT_SECRET_KEY = require("../config");
 accountRouter.get("/find", async function (req, res) {
+  const token = req.query.token;
+  if (token) {
+    const { email } = jwt.verify(token, JWT_SECRET_KEY);
+    const curUser = await User.findOne({
+      email,
+    });
+    res.json({
+      user: curUser,
+    });
+    return;
+  }
   const filter = req.query.filter || "";
   const users = await User.find({
     $or: [
@@ -102,7 +115,7 @@ accountRouter.post("/transfer", authMiddleware, async function (req, res) {
     message: "Transaction Successfull",
   });
 });
-accountRouter.post("/createCard", authMiddleware, async function (req, res) {
+accountRouter.put("/createcard", authMiddleware, async function (req, res) {
   const eligible = await User.findOneAndUpdate(
     {
       email: req.email,
@@ -143,7 +156,52 @@ accountRouter.post("/firstname", authMiddleware, async function (req, res) {
   );
 
   res.json({
-    message: "updated",
+    message: "Firstname Updated",
+  });
+});
+accountRouter.post("/lastname", authMiddleware, async function (req, res) {
+  const { lastname } = req.body;
+  await User.findOneAndUpdate(
+    {
+      email: req.email,
+    },
+    {
+      lastname,
+    }
+  );
+
+  res.json({
+    message: "Lastname Updated",
+  });
+});
+accountRouter.post("/pin", authMiddleware, async function (req, res) {
+  const { pin } = req.body;
+  await User.findOneAndUpdate(
+    {
+      email: req.email,
+    },
+    {
+      pin,
+    }
+  );
+
+  res.json({
+    message: "Pin Updated",
+  });
+});
+accountRouter.post("/password", authMiddleware, async function (req, res) {
+  const { password } = req.body;
+  await User.findOneAndUpdate(
+    {
+      email: req.email,
+    },
+    {
+      password,
+    }
+  );
+
+  res.json({
+    message: "Password Updated",
   });
 });
 module.exports = accountRouter;

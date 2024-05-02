@@ -6,7 +6,7 @@ const signupSchema = zod.object({
     .string({
       required_error: "Firstname is required.",
     })
-    .min(1, {
+    .min(2, {
       message: "Firstname should have atleast 2 characters.",
     }),
   lastname: zod
