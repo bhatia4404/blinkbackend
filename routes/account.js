@@ -150,7 +150,7 @@ accountRouter.put("/createcard", authMiddleware, async function (req, res) {
     message: "Card created successfully",
   });
 });
-accountRouter.post("/firstname", authMiddleware, async function (req, res) {
+accountRouter.put("/firstname", authMiddleware, async function (req, res) {
   const { firstname } = req.body;
   await User.findOneAndUpdate(
     {
@@ -165,7 +165,7 @@ accountRouter.post("/firstname", authMiddleware, async function (req, res) {
     message: "Firstname Updated",
   });
 });
-accountRouter.post("/lastname", authMiddleware, async function (req, res) {
+accountRouter.put("/lastname", authMiddleware, async function (req, res) {
   const { lastname } = req.body;
   await User.findOneAndUpdate(
     {
@@ -180,22 +180,22 @@ accountRouter.post("/lastname", authMiddleware, async function (req, res) {
     message: "Lastname Updated",
   });
 });
-accountRouter.post("/pin", authMiddleware, async function (req, res) {
-  const { pin } = req.body;
-  await User.findOneAndUpdate(
-    {
-      email: req.email,
-    },
-    {
-      pin,
-    }
-  );
+// accountRouter.post("/pin", authMiddleware, async function (req, res) {
+//   const { pin } = req.body;
+//   await User.findOneAndUpdate(
+//     {
+//       email: req.email,
+//     },
+//     {
+//       pin,
+//     }
+//   );
 
-  res.json({
-    message: "Pin Updated",
-  });
-});
-accountRouter.post("/password", authMiddleware, async function (req, res) {
+//   res.json({
+//     message: "Pin Updated",
+//   });
+// });
+accountRouter.put("/password", authMiddleware, async function (req, res) {
   const { password } = req.body;
   await User.findOneAndUpdate(
     {
@@ -208,6 +208,21 @@ accountRouter.post("/password", authMiddleware, async function (req, res) {
 
   res.json({
     message: "Password Updated",
+  });
+});
+accountRouter.put("/deletecard", authMiddleware, async function (req, res) {
+  await User.findOneAndUpdate(
+    {
+      email: req.email,
+    },
+    {
+      card: {
+        exists: false,
+      },
+    }
+  );
+  res.json({
+    message: "Card Deleted",
   });
 });
 module.exports = accountRouter;
