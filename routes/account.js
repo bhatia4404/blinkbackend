@@ -57,11 +57,17 @@ accountRouter.post("/transfer", authMiddleware, async function (req, res) {
   const session = await mongoose.startSession();
   session.startTransaction();
   const amt = Number(req.query.amt);
+  if (amt <= 0) {
+    res.json({
+      message: "We require a valid amount to proceed. ",
+    });
+    return;
+  }
   const fromUser = await User.findOne({
     email: req.email,
   });
   if (!fromUser) {
-    res.json({
+    res.status(400).json({
       message: "Transaction Failed",
     });
     return;
@@ -74,7 +80,7 @@ accountRouter.post("/transfer", authMiddleware, async function (req, res) {
     return;
   }
   const from = fromUser.blinkId;
-  const to = req.query.to.concat("@blink");
+  const to = req.query.to;
   const toUser = await User.findOne({
     blinkId: to,
   });
@@ -112,7 +118,7 @@ accountRouter.post("/transfer", authMiddleware, async function (req, res) {
   );
   await session.commitTransaction();
   res.status(200).json({
-    message: "Transaction Successfull",
+    message: "Transaction Successfull!",
   });
 });
 accountRouter.put("/createcard", authMiddleware, async function (req, res) {
