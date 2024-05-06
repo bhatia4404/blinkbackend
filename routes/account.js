@@ -66,6 +66,7 @@ accountRouter.post("/transfer", authMiddleware, async function (req, res) {
   const fromUser = await User.findOne({
     email: req.email,
   });
+  const fromUserPrevTransaction = fromUser.transactions;
   if (!fromUser) {
     res.status(400).json({
       message: "Transaction Failed",
@@ -84,6 +85,8 @@ accountRouter.post("/transfer", authMiddleware, async function (req, res) {
   const toUser = await User.findOne({
     blinkId: to,
   });
+  const toUserPrevTransaction = toUser.transactions;
+  console.log(toUser);
   if (!toUser) {
     res.json({
       message: "Transaction Failed",
@@ -98,9 +101,11 @@ accountRouter.post("/transfer", authMiddleware, async function (req, res) {
       $inc: {
         balance: -amt,
       },
-      $push: {
-        transactions: { amt: -amt, to, time: Date.now() },
-      },
+
+      transactions: [
+        { amt: -amt, to, time: new Date() },
+        ...fromUserPrevTransaction,
+      ],
     }
   );
   await User.updateOne(
@@ -111,9 +116,8 @@ accountRouter.post("/transfer", authMiddleware, async function (req, res) {
       $inc: {
         balance: +amt,
       },
-      $push: {
-        transactions: { amt, from, time: Date.now() },
-      },
+
+      transactions: [{ amt, from, time: new Date() }, ...toUserPrevTransaction],
     }
   );
   await session.commitTransaction();

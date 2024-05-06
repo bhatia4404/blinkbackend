@@ -25,7 +25,13 @@ userRouter.post("/signup", signupMiddleware, async function (req, res) {
     password,
     balance: newBal,
     blinkId: generateId({ suffix: "@blink" }),
-    transactions: [newBal],
+    transactions: [
+      {
+        from: "Initial Deposit",
+        amt: newBal,
+        time: new Date(),
+      },
+    ],
     card: { exists: false },
   });
 
