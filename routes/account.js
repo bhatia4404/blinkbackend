@@ -86,7 +86,7 @@ accountRouter.post("/transfer", authMiddleware, async function (req, res) {
     blinkId: to,
   });
   const toUserPrevTransaction = toUser.transactions;
-  console.log(toUser);
+
   if (!toUser) {
     res.json({
       message: "Transaction Failed",
@@ -229,4 +229,21 @@ accountRouter.put("/deletecard", authMiddleware, async function (req, res) {
     message: "Card Deleted",
   });
 });
-module.exports = accountRouter;
+//later
+// accountRouter.get("/balance", authMiddleware, async function (req, res) {
+//   const user = await User.find({
+//     email: req.email,
+//   });
+//   res.json({
+//     balance: user.balance,
+//   });
+// });
+// accountRouter.get("/transactions", authMiddleware, async function (req, res) {
+//   const user = await User.find({
+//     email: req.email,
+//   });
+//   res.json({
+//     balance: user.transactions,
+//   });
+// });
+// module.exports = accountRouter;
