@@ -63,4 +63,9 @@ userRouter.post("/signin", signinMiddleware, async function (req, res, next) {
   });
   next();
 });
+userRouter.get("/ping", function (req, res) {
+  res.json({
+    message: "Hello",
+  });
+});
 module.exports = userRouter;
