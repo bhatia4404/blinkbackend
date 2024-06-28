@@ -246,4 +246,4 @@ accountRouter.put("/deletecard", authMiddleware, async function (req, res) {
 //     balance: user.transactions,
 //   });
 // });
-// module.exports = accountRouter;
+module.exports = accountRouter;
