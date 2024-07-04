@@ -6,5 +6,5 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use("/api/v1", rootRouter);
-const PORT = 8080;
+const PORT = 3001;
 app.listen(PORT, () => console.log("Server 👍", PORT));

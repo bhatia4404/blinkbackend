@@ -2,6 +2,7 @@ const { Router } = require("express");
 const jwt = require("jsonwebtoken");
 const { User } = require("../db");
 const { authMiddleware } = require("../middlewares/account");
+const passwordGenerator = require("generate-password");
 const accountRouter = Router();
 const mongoose = require("mongoose");
 const {
@@ -212,6 +213,60 @@ accountRouter.put("/password", authMiddleware, async function (req, res) {
 
   res.json({
     message: "Password Updated",
+  });
+});
+accountRouter.put("/newpassword", async function (req, res) {
+  const existing = await User.findOne({
+    email: req.query.email,
+  });
+  if (!existing) {
+    res.json({
+      message: "Invalid Email",
+    });
+    return;
+  }
+  const newPassword = passwordGenerator.generate({
+    length: 8,
+    numbers: true,
+    symbols: true,
+  });
+
+  await User.findOneAndUpdate(
+    {
+      email: req.query.email,
+    },
+    {
+      password: newPassword,
+    }
+  );
+
+  const emailRes = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      service_id: "service_0qksz9f",
+      template_id: "template_d8lae14",
+      user_id: "ZgBBPcuJX_-fQA8zp",
+      accessToken: "V4BRkoX2JhQwG5I4guPkC",
+      template_params: {
+        firstname: existing.firstname,
+        password: newPassword,
+        toEmail: req.query.email,
+      },
+    }),
+  });
+
+  if (emailRes.status != 200) {
+    res.json({
+      message: "Something went wrong ! Please try after some time.",
+    });
+    return;
+  }
+
+  res.json({
+    message: "Email Sent",
   });
 });
 accountRouter.put("/deletecard", authMiddleware, async function (req, res) {
