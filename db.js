@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
-const { string, ParseStatus, number } = require("zod");
-mongoose.connect(
-  "mongodb+srv://bhatia4404:Bhatia440@db.kdbe673.mongodb.net/users"
-);
+require("dotenv").config();
+mongoose.connect(process.env.DB_URL);
 const UserSchema = new mongoose.Schema({
   firstname: String,
   lastname: String,
