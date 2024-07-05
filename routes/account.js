@@ -12,6 +12,23 @@ const {
   generateExpiry,
 } = require("../helpers/generateCard");
 const JWT_SECRET_KEY = require("../config");
+accountRouter.get("/existing", async function (req, res) {
+  const { email } = req.query;
+  const existing = await User.findOne({
+    email,
+  });
+
+  if (existing) {
+    res.json({
+      existing: true,
+    });
+    return;
+  }
+  res.json({
+    existing: false,
+  });
+  return;
+});
 accountRouter.get("/find", async function (req, res) {
   const token = req.query.token;
   if (token) {
