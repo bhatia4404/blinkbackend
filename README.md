@@ -3,7 +3,7 @@
 **Blink** is a banking model designed to provide secure and convenient digital wallet and card facilities. This project simulates a streamlined banking experience, allowing users to manage funds, make transactions, and monitor card activities seamlessly. Built with scalability and security in mind, Blink can serve as a foundation for developing comprehensive banking applications.
 
 - Visit [Blink](https://blinkpay.netlify.app/)
-- [Back-end Repository](https://github.com/bhatia4404/blink)
+- [Front-end Repository](https://github.com/bhatia4404/blink)
 
 # Features
 
